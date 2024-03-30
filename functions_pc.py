@@ -1,6 +1,8 @@
 from __future__ import print_function
 import time
 import pyautogui
+import platform
+import screen_brightness_control as sbc
 from pynput.keyboard import Key, Controller
 
 
@@ -17,10 +19,14 @@ def screenshot_save_file():
 
 # Создание скриншота (системно)
 def screenshot_save_system():
-    keyboard = Controller()
-    with keyboard.pressed(Key.shift_l):
-        with keyboard.pressed(Key.cmd):
-            keyboard.tap('3')
+    match platform.system():
+        case 'Darwin':
+            with keyboard.pressed(Key.shift_l):
+                with keyboard.pressed(Key.cmd):
+                    keyboard.tap('3')
+        case 'Windows':
+            with keyboard.pressed(Key.cmd_l):
+                keyboard.tap(Key.print_screen)
     print(f'*** 📸 The screenshot has been SAVED ***')
 
 
@@ -62,24 +68,40 @@ def previous_track():
 
 # -------------------- Яркость --------------------
 
+# Увеличение яркости (только для Windows)
 def brightness_up():
-    pass
+    match platform.system():
+        case 'Darwin':
+            print("The brightness' controlling is unavailable on MacOS")
+        case 'Linux':
+            print("The brightness' controlling is unavailable on Linux")
+        case 'Windows':
+            sbc.set_brightness(sbc.get_brightness()[0] + 10)
+            print(f'*** 🔆 The brightness has been INCREASED : {sbc.get_brightness()[0]}% ***')
 
+# Уменьшение яркости (только для Windows)
 def brightness_down():
-    pass
+    match platform.system():
+        case 'Darwin':
+            print("The brightness' controlling is unavailable on MacOS")
+        case 'Linux':
+            print("The brightness' controlling is unavailable on Linux")
+        case 'Windows':
+            sbc.set_brightness(sbc.get_brightness()[0] - 10)
+            print(f'*** 🔅 The brightness has been REDUCED : {sbc.get_brightness()[0]}% ***')
 
 
 if __name__ == '__main__':
 
     while True:
 
-        x = int(input('\n0 (screenshot 📸)\n1 (volume_up 🔊)\n2 (volume_down 🔉)\n3 (mute 🔇)\n4 (play_pause ⏯️️)\n5 (next_track ⏭️️)\n6 (previous_track ⏮️️️️️)\n'))
+        x = int(input('\n0 (screenshot 📸)\n1 (volume_up 🔊)\n2 (volume_down 🔉)\n3 (mute 🔇)\n4 (play_pause ⏯️)\n5 (next_track ⏭️)\n6 (previous_track ⏮️️️️)\n7 (brightness_up 🔆️️️)\n8 (brightness_down 🔅️️️)\n'))
 
         match x:
             case 0:
                 screenshot_save_system()
             case 1:
-                for _ in range (10):
+                for _ in range(10):
                     volume_up()
                     time.sleep(0.1)
             case 2:
@@ -94,5 +116,9 @@ if __name__ == '__main__':
                 next_track()
             case 6:
                 previous_track()
+            case 7:
+                brightness_up()
+            case 8:
+                brightness_down()
             case default:
                 pass

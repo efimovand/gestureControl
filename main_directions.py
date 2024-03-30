@@ -2,7 +2,7 @@ import time
 import cv2
 import mediapipe as mp
 from collections import deque
-from functions_pc import screenshot_save_file, screenshot_save_system, volume_up, volume_down, volume_mute, play_pause, next_track, previous_track
+from functions_pc import screenshot_save_file, screenshot_save_system, volume_up, volume_down, volume_mute, play_pause, next_track, previous_track, brightness_up, brightness_down
 
 
 cap = cv2.VideoCapture(0)  # Камера
@@ -62,8 +62,10 @@ while True:
                         # Определение направления движения по X
                         if x_diff > motion_threshold:
                             motion_direction_X = 'вправо'
+                            # brightness_up()
                         elif x_diff < -motion_threshold:
                             motion_direction_X = 'влево'
+                            # brightness_down()
                         else:
                             motion_direction_X = None
 
